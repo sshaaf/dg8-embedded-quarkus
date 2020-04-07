@@ -19,6 +19,10 @@ Be aware that it’s not an _über-jar_ as the dependencies are copied into the 
 
 The application is now runnable using `java -jar target/dg8-embedded-quarkus-1.0.0-SNAPSHOT-runner.jar`.
 
+## Deploying on Openshift
+To build on openshift `./mvnw clean package -Dquarkus.container-image.build=true`
+To deploy `./mvnw clean package -Dquarkus.kubernetes.deploy=true`
+
 ## Creating a native executable
 
 You can create a native executable using: `./mvnw package -Pnative`.
@@ -28,3 +32,6 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/dg8-embedded-quarkus-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image-guide.
+
+
+

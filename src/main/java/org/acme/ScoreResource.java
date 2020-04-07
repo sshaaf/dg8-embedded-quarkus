@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -24,6 +25,13 @@ public class ScoreResource {
     @OPTIONS
     public Response opt() {
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/hello")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return "hello";
     }
 
     @GET
