@@ -6,20 +6,17 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.List;
 
 
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/api")
 public class ScoreResource {
-
 
     @Inject
     ScoreService scoreService;
@@ -44,9 +41,10 @@ public class ScoreResource {
         return entity;
     }
 
+
     @POST
     @Transactional
-    public Response create(@Valid ScoreCard item) {
+    public Response create(@Valid Score item) {
         scoreService.save(item);
         return Response.status(Status.CREATED).entity(item).build();
     }
@@ -54,7 +52,8 @@ public class ScoreResource {
     @PATCH
     @Path("/{id}")
     @Transactional
-    public Response update(@Valid ScoreCard card, @PathParam("id") Long id) {
+    public Response update(@Valid Score card, @PathParam("id") Long id) {
+        System.out.println(card);
         scoreService.save(card);
         return Response.status(Status.CREATED).entity(card).build();
 
@@ -62,7 +61,7 @@ public class ScoreResource {
 
     @DELETE
     @Transactional
-    public Response deleteCompleted() {
+    public Response delete() {
         return Response.noContent().build();
     }
 
@@ -72,7 +71,5 @@ public class ScoreResource {
     public Response deleteOne(@PathParam("id") Long id) {
         return Response.noContent().build();
     }
-
-
 
 }

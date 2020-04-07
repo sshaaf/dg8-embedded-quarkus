@@ -1,9 +1,7 @@
 package org.acme;
 
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,14 +15,10 @@ import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 
-import java.util.stream.Collectors;
-
 @ApplicationScoped
 public class ScoreService {
 
-    private Set<ScoreCard> entries = new HashSet<>();
-
-    Cache<Object, Object> userCache;
+    Cache<Object, Score> scoreCache;
 
     Logger log = LoggerFactory.getLogger(ScoreService.class);
 
@@ -32,33 +26,42 @@ public class ScoreService {
     EmbeddedCacheManager cacheManager;
 
     public List<Object> getAll() {
-        return userCache.entrySet().stream().collect(Collectors.toList());
+        return new ArrayList<>(scoreCache.values());
     }
 
     
-    public void save(ScoreCard entry) {
-        entries.add(entry);
+    public void save(Score entry) {
+        scoreCache.put(entry.getPlayerId(), entry);
     }
 
-    public void delete(ScoreCard entry) {
-        entries.remove(entry);
+    public void delete(Score entry) {
+        scoreCache.remove(entry.getPlayerId());
     }
 
+    public void getEntry(Score entry){
+        scoreCache.get(entry.getPlayerId());
+    }
+
+    public void getEntry(String playerId){
+        scoreCache.get(playerId);
+    }
 
     @PostConstruct
     public void init(){
 
         EmbeddedCacheManager cacheManager = new DefaultCacheManager();
         cacheManager.defineConfiguration("users", new ConfigurationBuilder().build());
-        userCache = cacheManager.getCache("users");
-        userCache.addListener(new CacheListener());
+        scoreCache = cacheManager.getCache("users");
+        scoreCache.addListener(new CacheListener());
 
-        ScoreCard card = new ScoreCard("Shaaf", "1");
-        userCache.put(card, card.playerId);
+        Score card = new Score("Shaaf", "1");
+        card.addScore(5);
+        card.addScore(4);
+        scoreCache.put(card.getPlayerId(), card);
 
     }
 
     public Object findById(String id) {
-        return userCache.get(id);
+        return scoreCache.get(id);
     }
 }

@@ -1,44 +1,112 @@
 package org.acme;
 
+import javax.json.bind.annotation.JsonbCreator;
+import javax.json.bind.annotation.JsonbProperty;
+
 public class Score {
 
-    public String holeName;
+    public static final int HOLES = 18;
 
-    public int holeNumber;
+    private int currentHole = 0;
 
-    public int handicap;
+    private String playerName;
 
-    public int shots;
+    private String playerId;
 
-    public String getHoleName() {
-        return holeName;
+    private int[] card = new int[HOLES];
+
+    private String course = "St.Andrews Links";
+
+    private int[] courseCard = {4,4,4,4,5,4,4,3,4,4,3,4,4,5,4,4,4,4};
+
+    public Score() {
     }
 
-    public void setHoleName(String holeName) {
-        this.holeName = holeName;
+
+    @JsonbCreator
+    public Score(@JsonbProperty("playerName") String playerName, @JsonbProperty("playerId") String playerId, @JsonbProperty("card") int[] card) {
+        if(playerName == null || playerName.equals(""))
+            throw new IllegalArgumentException("Player name cannot be null "+playerName);
+        else {
+            this.playerName = playerName;
+            this.playerId = playerId;
+            this.setCard(card);
+        }
     }
 
-    public int getHoleNumber() {
-        return holeNumber;
+    public Score(String playerName, String playerId, String course, int[] courseCard) {
+        if(playerName == null || playerName.equals(""))
+            throw new IllegalArgumentException("Player name cannot be null "+playerName);
+        else {
+            this.playerName = playerName;
+            this.playerId = playerId;
+            this.course = course;
+            this.courseCard = courseCard;
+        }
     }
 
-    public void setHoleNumber(int holeNumber) {
-        this.holeNumber = holeNumber;
+
+    public Score(String playerName, String playerId) {
+        if(playerName == null || playerName.equals(""))
+            throw new IllegalArgumentException("Player name cannot be null "+playerName);
+        else {
+            this.playerName = playerName;
+            this.playerId = playerId;
+        }
     }
 
-    public int getHandicap() {
-        return handicap;
+    public int getCurrentHole() {
+        return currentHole;
     }
 
-    public void setHandicap(int handicap) {
-        this.handicap = handicap;
+    public void setCurrentHole(int currentHole) {
+        this.currentHole = currentHole;
     }
 
-    public int getShots() {
-        return shots;
+    public void addScore(int score){
+        card[currentHole] = score;
+        currentHole++;
     }
 
-    public void setShots(int shots) {
-        this.shots = shots;
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
+
+    public int getTotalScore(){
+        int score = 0;
+        int courseScore = 0;
+        for(int i=0; i<currentHole; i++) {
+            score = score + card[i];
+            courseScore = courseScore + courseCard[i];
+        }
+
+        return score-courseScore;
+    }
+
+    public String getPlayerId() { return playerId; }
+
+    public void setPlayerId(String playerId) { this.playerId = playerId; }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public int[] getCard() {
+        return card;
+    }
+
+    public void setCard(int[] card) {
+        this.card = card;
+
+        if(card.length < HOLES)
+            currentHole = card.length + 1;
     }
 }
