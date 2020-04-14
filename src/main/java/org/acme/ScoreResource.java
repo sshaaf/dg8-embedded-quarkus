@@ -14,8 +14,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 
-@Produces("application/json")
-@Consumes("application/json")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @Path("/api")
 public class ScoreResource {
 
@@ -29,13 +29,12 @@ public class ScoreResource {
 
     @GET
     @Path("/hello")
-    @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
         return "hello";
     }
 
     @GET
-    public List<Object> getAll() {
+    public List<Score> getAll() {
         return scoreService.getAll();
     }
 
@@ -61,7 +60,6 @@ public class ScoreResource {
     @Path("/{id}")
     @Transactional
     public Response update(@Valid Score card, @PathParam("id") Long id) {
-        System.out.println(card);
         scoreService.save(card);
         return Response.status(Status.CREATED).entity(card).build();
 

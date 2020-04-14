@@ -1,38 +1,32 @@
 package org.acme;
 
-import javax.json.bind.annotation.JsonbCreator;
-import javax.json.bind.annotation.JsonbProperty;
-
 public class Score {
 
+    // The number of holes played per round
     public static final int HOLES = 18;
 
+    // The players currentHole
     private int currentHole = 0;
 
+    // Name of the player
     private String playerName;
 
+    // players unique Id
     private String playerId;
 
+    // The actual scoreCard
     private int[] card = new int[HOLES];
 
+    // The course player is playing on.
     private String course = "St.Andrews Links";
 
+    // the courseCard; the expected handicap
     private int[] courseCard = {4,4,4,4,5,4,4,3,4,4,3,4,4,5,4,4,4,4};
 
+    // Used with Json serialization
     public Score() {
     }
 
-
-    @JsonbCreator
-    public Score(@JsonbProperty("playerName") String playerName, @JsonbProperty("playerId") String playerId, @JsonbProperty("card") int[] card) {
-        if(playerName == null || playerName.equals(""))
-            throw new IllegalArgumentException("Player name cannot be null "+playerName);
-        else {
-            this.playerName = playerName;
-            this.playerId = playerId;
-            this.setCard(card);
-        }
-    }
 
     public Score(String playerName, String playerId, String course, int[] courseCard) {
         if(playerName == null || playerName.equals(""))
@@ -80,6 +74,8 @@ public class Score {
         int score = 0;
         int courseScore = 0;
         for(int i=0; i<currentHole; i++) {
+            if(currentHole>=18)
+                break;
             score = score + card[i];
             courseScore = courseScore + courseCard[i];
         }
