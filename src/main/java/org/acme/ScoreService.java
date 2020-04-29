@@ -19,7 +19,9 @@ import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.configuration.cache.StorageType;
+import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.distribution.group.Grouper;
+import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.eviction.EvictionType;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
@@ -40,57 +42,42 @@ public class ScoreService {
     }
 
     public void save(Score entry) {
-        scoreCache.put(getKey(entry), entry);
+        scoreCache.put(entry.getKey(), entry);
     }
 
     public void delete(Score entry) {
-        scoreCache.remove(getKey(entry));
+        scoreCache.remove(entry.getKey());
     }
 
     public void getEntry(Score entry){
-        scoreCache.get(getKey(entry));
+        scoreCache.get(entry.getKey());
     }
 
-    @PostConstruct
-    public void init(){
-
-    }
-
-    public static String getKey(Score entry){
-        return entry.getPlayerId()+","+entry.getCourse();
-    }
 
     public Score findById(String key) {
         return scoreCache.get(key);
     }
 
-
     void onStart(@Observes @Priority(value = 1) StartupEvent ev){
-        //GlobalConfigurationBuilder global = GlobalConfigurationBuilder.defaultClusteredBuilder();
-        //global.transport().clusterName("ScoreCard");
-        //cacheManager = new DefaultCacheManager(global.build());
-        cacheManager = new DefaultCacheManager();
+        GlobalConfigurationBuilder global = GlobalConfigurationBuilder.defaultClusteredBuilder();
+        global.transport().clusterName("ScoreCard");
+        cacheManager = new DefaultCacheManager(global.build());
+
         ConfigurationBuilder config = new ConfigurationBuilder();
-        Configuration c = new ConfigurationBuilder()
-                .memory()
-                .storageType(StorageType.BINARY)
-                .evictionType(EvictionType.MEMORY)
-                .size(1_000_000_000)
-                .build();
 
-
-        config.expiration().lifespan(5, TimeUnit.MINUTES);
-//                .clustering().cacheMode(CacheMode.DIST_SYNC);
-//                .hash().groups().enabled().addGrouper(new ScoreService.CourseGrouper());
+        config.expiration().lifespan(5, TimeUnit.HOURS)
+                .clustering().cacheMode(CacheMode.REPL_SYNC);
 
         cacheManager.defineConfiguration("scoreboard", config.build());
         scoreCache = cacheManager.getCache("scoreboard");
-//        scoreCache.addListener(new CacheListener());
+        scoreCache.addListener(new CacheListener());
 
 
         log.info("Cache initialized");
 
     }
+
+
 
 
     public static class CourseGrouper implements Grouper<String> {

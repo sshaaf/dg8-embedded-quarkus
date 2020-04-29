@@ -4,27 +4,31 @@ export EP=http://localhost:8080/api
 
 curl --header "Content-Type: application/json" \
   --request POST \
-  -d '{"card":[5,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"course":"Bethapage","currentHole":3,"playerId":"4","playerName":"Shaaf"}' \
+  -d '{"course":"Bethpage","score":64,"playerId":"1","playerName":"Gary Player","country":"SA"}' \
   $EP
-
-echo " "
-curl --header "Content-Type: application/json" \
-  --request POST \
-  -d '{"card":[5,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"course":"Firestone","currentHole":3,"playerId":"3","playerName":"Dan"}' \
-  $EP
-
 echo " "
 
 curl --header "Content-Type: application/json" \
   --request POST \
-  -d '{"card":[5,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"course":"Bethapage","currentHole":3,"playerId":"2","playerName":"James"}' \
+  -d '{"course":"Bethpage","score":61,"playerId":"2","playerName":"Jack Niklaus","country":"USA"}' \
   $EP
 
-echo " "
+curl --header "Content-Type: application/json" \
+  --request POST \
+  -d '{"course":"TheOpen","score":55,"playerId":"3","playerName":"Homero Blancas","country":"Spain"}' \
+  $EP
 
 curl --header "Content-Type: application/json" \
-  --request PATCH \
-  -d '{"card":[5,4,4,10,3,0,0,0,0,0,0,0,0,0,0,0,0,0],"course":"Bethapage","currentHole":4,"playerId":"4","playerName":"Shaaf"}' \
-  $EP/4
+  --request POST \
+  -d '{"course":"TheOpen","score":58,"playerId":"4","playerName":"Tiger Woods","country":"USA"}' \
+  $EP
+
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  -d '{"course":"TheOpen","score":57,"playerId":"5","playerName":"Colin Montgomery","country":"UK"}' \
+  $EP
+
+
 
 echo " "

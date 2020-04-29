@@ -2,64 +2,35 @@ package org.acme;
 
 public class Score {
 
-    // The number of holes played per round
-    public static final int HOLES = 18;
-
-    // The players currentHole
-    private int currentHole = 0;
+    private String key = null;
 
     // Name of the player
-    private String playerName;
+    private String playerName = null;
 
-    // players unique Id
-    private String playerId;
+    private int score = 0;
 
-    // The actual scoreCard
-    private int[] card = new int[HOLES];
+    private String course = null;
 
-    // The course player is playing on.
-    private String course = "St.Andrews Links";
+    private String country = null;
 
-    // the courseCard; the expected handicap
-    private int[] courseCard = {4,4,4,4,5,4,4,3,4,4,3,4,4,5,4,4,4,4};
-
-    // Used with Json serialization
-    public Score() {
+    public String getKey(){
+        return playerName+","+country;
     }
 
-
-    public Score(String playerName, String playerId, String course, int[] courseCard) {
-        if(playerName == null || playerName.equals(""))
-            throw new IllegalArgumentException("Player name cannot be null "+playerName);
-        else {
-            this.playerName = playerName;
-            this.playerId = playerId;
-            this.course = course;
-            this.courseCard = courseCard;
-        }
+    public String getPlayerName() {
+        return playerName;
     }
 
-
-    public Score(String playerName, String playerId) {
-        if(playerName == null || playerName.equals(""))
-            throw new IllegalArgumentException("Player name cannot be null "+playerName);
-        else {
-            this.playerName = playerName;
-            this.playerId = playerId;
-        }
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 
-    public int getCurrentHole() {
-        return currentHole;
+    public int getScore() {
+        return score;
     }
 
-    public void setCurrentHole(int currentHole) {
-        this.currentHole = currentHole;
-    }
-
-    public void addScore(int score){
-        card[currentHole] = score;
-        currentHole++;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public String getCourse() {
@@ -70,39 +41,11 @@ public class Score {
         this.course = course;
     }
 
-    public int getTotalScore(){
-        int score = 0;
-        int courseScore = 0;
-        for(int i=0; i<currentHole; i++) {
-            if(currentHole>=18)
-                break;
-            score = score + card[i];
-            courseScore = courseScore + courseCard[i];
-        }
-
-        return score-courseScore;
+    public String getCountry() {
+        return country;
     }
 
-    public String getPlayerId() { return playerId; }
-
-    public void setPlayerId(String playerId) { this.playerId = playerId; }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
-
-    public int[] getCard() {
-        return card;
-    }
-
-    public void setCard(int[] card) {
-        this.card = card;
-
-        if(card.length < HOLES)
-            currentHole = card.length + 1;
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
