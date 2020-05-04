@@ -34,7 +34,6 @@ public class ScoreService {
 
     Logger log = LoggerFactory.getLogger(ScoreService.class);
 
-    @Inject
     EmbeddedCacheManager cacheManager;
 
     public List<Score> getAll() {
