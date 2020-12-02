@@ -52,7 +52,6 @@ public class ScoreService {
         scoreCache.get(entry.getKey());
     }
 
-
     public Score findById(String key) {
         return scoreCache.get(key);
     }
